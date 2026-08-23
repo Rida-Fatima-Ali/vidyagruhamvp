@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { db } from "@/services/database";
+import { mvpDb } from "@/lib/supabase/database";
+import { validateLoginIdentifier } from "@/lib/auth/validation";
 
 export async function POST(request: Request) {
   try {
@@ -13,45 +14,60 @@ export async function POST(request: Request) {
       );
     }
 
-    const cleanId = String(identifier).trim();
+    const cleanId = String(identifier).trim().toLowerCase();
 
-    // Enforce @somaiya.edu domain for students and faculty
-    if (role !== "admin" && cleanId !== "admin01") {
-      if (!cleanId.toLowerCase().endsWith("@somaiya.edu")) {
-        return NextResponse.json(
-          { error: "Student and Faculty logins require a valid @somaiya.edu address." },
-          { status: 400 }
-        );
-      }
+    // 1. Enforce Somaiya domain validation server-side (single source of truth)
+    const validation = validateLoginIdentifier(cleanId, role);
+    if (!validation.isValid) {
+      return NextResponse.json({ error: validation.error }, { status: 400 });
     }
 
-    const result = db.authenticate(cleanId, password, role);
-
-    if (!result.success || !result.user) {
+    // 2. Query Profile from database by email/identifier
+    const profile = mvpDb.findProfileByEmail(cleanId);
+    if (!profile) {
       return NextResponse.json(
-        { error: result.error || "Invalid username or password." },
+        { error: "Invalid username or password." },
         { status: 401 }
       );
     }
 
-    const user = result.user;
+    // 3. Security: Role MUST come from the database (never trusted blindly from frontend)
+    if (role && profile.role !== role) {
+      return NextResponse.json(
+        { error: "Invalid account type selected for this user." },
+        { status: 403 }
+      );
+    }
+
+    // 4. Verify password (prototype password check)
+    if (password !== "kjsp@123") {
+      return NextResponse.json(
+        { error: "Invalid username or password." },
+        { status: 401 }
+      );
+    }
+
+    // Determine role-based redirection URL
+    let redirectUrl = "/student/dashboard";
+    if (profile.role === "faculty") redirectUrl = "/faculty/dashboard";
+    if (profile.role === "admin") redirectUrl = "/admin/dashboard";
+
     return NextResponse.json({
       success: true,
       user: {
-        id: user.id,
-        displayName: user.displayName,
-        name: user.displayName,
-        username: user.username,
-        email: user.email,
-        role: user.role,
-        programme: user.programme,
-        year: user.year,
-        department: user.department,
+        id: profile.id,
+        name: profile.name,
+        displayName: profile.name,
+        email: profile.email,
+        username: profile.email,
+        role: profile.role,
+        department_name: profile.department_name,
       },
+      redirectUrl,
     });
   } catch (err: any) {
     return NextResponse.json(
-      { error: "An unexpected error occurred during authentication." },
+      { error: "Internal server error during authentication." },
       { status: 500 }
     );
   }

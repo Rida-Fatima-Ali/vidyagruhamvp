@@ -1,31 +1,27 @@
 import { NextResponse } from "next/server";
-import { db } from "@/services/database";
+import { mvpDb } from "@/lib/supabase/database";
+import { isAllowedInstitutionEmail, getAllowedEmailDomain } from "@/lib/auth/validation";
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { displayName, email, role, password } = body;
+    const { name, displayName, email, password } = body;
+    const fullName = displayName || name;
 
-    if (!displayName || !email || !password || !role) {
+    if (!fullName || !email || !password) {
       return NextResponse.json(
-        { error: "Full Name, Email, Role, and Password are all required." },
-        { status: 400 }
-      );
-    }
-
-    if (role !== "student" && role !== "faculty") {
-      return NextResponse.json(
-        { error: "Only Student and Faculty roles are eligible for self-registration." },
+        { error: "Full name, email, and password are required." },
         { status: 400 }
       );
     }
 
     const cleanEmail = String(email).trim().toLowerCase();
 
-    // Backend domain enforcement
-    if (!cleanEmail.endsWith("@somaiya.edu")) {
+    // 1. Single source of truth domain validation
+    if (!isAllowedInstitutionEmail(cleanEmail)) {
+      const domain = getAllowedEmailDomain();
       return NextResponse.json(
-        { error: "Registration is restricted to institutional accounts ending with @somaiya.edu" },
+        { error: `Registration rejected. Only institutional emails ending with @${domain} are allowed.` },
         { status: 400 }
       );
     }
@@ -37,31 +33,35 @@ export async function POST(request: Request) {
       );
     }
 
-    const result = db.createRegistrationRequest({
-      displayName: String(displayName).trim(),
-      email: cleanEmail,
-      role,
-      password,
-    });
-
-    if (!result.success || !result.request) {
+    // 2. Prevent duplicate email accounts
+    const existing = mvpDb.findProfileByEmail(cleanEmail);
+    if (existing) {
       return NextResponse.json(
-        { error: result.error || "Failed to submit registration request." },
-        { status: 400 }
+        { error: "An account with this email address already exists. Please log in." },
+        { status: 409 }
       );
     }
+
+    // 3. Security: Default new public registrations strictly to "student"
+    const newProfile = mvpDb.createProfile(fullName, cleanEmail, "student");
 
     return NextResponse.json(
       {
         success: true,
-        message: "Registration request submitted for administrative review.",
-        request: result.request,
+        message: "Account registered successfully.",
+        user: {
+          id: newProfile.id,
+          name: newProfile.name,
+          displayName: newProfile.name,
+          email: newProfile.email,
+          role: newProfile.role,
+        },
       },
       { status: 201 }
     );
   } catch (err: any) {
     return NextResponse.json(
-      { error: "An unexpected error occurred while processing registration." },
+      { error: "Internal server error during registration." },
       { status: 500 }
     );
   }
