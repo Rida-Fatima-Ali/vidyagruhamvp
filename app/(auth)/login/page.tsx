@@ -20,6 +20,8 @@ import {
 import { useAuth } from "@/hooks/use-auth";
 import type { UserRole } from "@/types/auth";
 import { VidyaGruhaWordmark } from "@/components/common/vidyagruha-wordmark";
+import { ThemeToggle } from "@/components/navigation/theme-toggle";
+import { cn } from "@/utils/cn";
 
 const ROLES: { id: UserRole; label: string; icon: any; hint: string }[] = [
   {
@@ -133,6 +135,7 @@ export default function LoginPage() {
           </Link>
 
           <div className="flex items-center gap-4">
+            <ThemeToggle />
             <Link
               href="/signup"
               className="text-[12px] font-semibold tracking-[0.14em] uppercase text-[#8B1E1E] hover:underline"
@@ -152,9 +155,9 @@ export default function LoginPage() {
       {/* Main Login Card */}
       <main className="flex-1 max-w-[1200px] w-full mx-auto px-6 sm:px-10 py-10 lg:py-16 flex flex-col items-center justify-center">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
           className="w-full max-w-md bg-card border border-border rounded-2xl p-8 sm:p-10 shadow-sm"
         >
           {/* Brand Logo & Welcome */}
@@ -170,12 +173,12 @@ export default function LoginPage() {
             </p>
           </div>
 
-          {/* Account Type Selection Tabs */}
+          {/* Account Type Selection Tabs with Smooth Spring Pill */}
           <div className="mb-6">
-            <label className="block text-[11px] font-semibold uppercase tracking-wider text-[#77736B] mb-2 text-center">
+            <label className="block text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-2 text-center">
               Select Account Type
             </label>
-            <div className="grid grid-cols-3 gap-2 bg-[#FAF9F5] p-1.5 rounded-xl border border-[#28251D]/10">
+            <div className="relative grid grid-cols-3 gap-1 bg-secondary/60 p-1.5 rounded-xl border border-border">
               {ROLES.map((r) => {
                 const Icon = r.icon;
                 const isSelected = role === r.id;
@@ -184,12 +187,20 @@ export default function LoginPage() {
                     key={r.id}
                     type="button"
                     onClick={() => handleSelectRole(r.id)}
-                    className={`flex items-center justify-center gap-1.5 py-2.5 px-2 rounded-lg text-xs font-semibold transition-all ${
+                    className={cn(
+                      "relative flex items-center justify-center gap-1.5 py-2.5 px-2 rounded-lg text-xs font-semibold transition-colors duration-150 z-10 cursor-pointer",
                       isSelected
-                        ? "bg-[#1C1917] text-white shadow-sm"
-                        : "text-[#77736B] hover:text-[#1C1917] hover:bg-white/50"
-                    }`}
+                        ? "text-white dark:text-[#1C1917]"
+                        : "text-muted-foreground hover:text-foreground"
+                    )}
                   >
+                    {isSelected && (
+                      <motion.div
+                        layoutId="activeRoleIndicator"
+                        transition={{ type: "spring", stiffness: 500, damping: 35 }}
+                        className="absolute inset-0 bg-[#1C1917] dark:bg-[#FAF9F5] rounded-lg shadow-sm z-[-1]"
+                      />
+                    )}
                     <Icon className="w-3.5 h-3.5" />
                     <span>{r.label}</span>
                   </button>

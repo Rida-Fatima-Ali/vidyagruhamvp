@@ -56,11 +56,16 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   }, [theme]);
 
   const setThemePref = useCallback((next: Theme) => {
+    applyTheme(next);
     setTheme(next);
   }, []);
 
   const toggleTheme = useCallback(() => {
-    setTheme((current) => (current === "dark" ? "light" : "dark"));
+    setTheme((current) => {
+      const next = current === "dark" ? "light" : "dark";
+      applyTheme(next);
+      return next;
+    });
   }, []);
 
   return (
