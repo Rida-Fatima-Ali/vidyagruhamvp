@@ -148,6 +148,7 @@ export function ApprovalsView() {
                   <th className="px-5 py-3">Applicant Name</th>
                   <th className="px-5 py-3">Somaiya Email</th>
                   <th className="px-5 py-3">Role</th>
+                  <th className="px-5 py-3">Department</th>
                   <th className="px-5 py-3">Requested</th>
                   <th className="px-5 py-3">Status</th>
                   <th className="px-5 py-3 text-right">Actions</th>
@@ -166,6 +167,9 @@ export function ApprovalsView() {
                       <Badge variant={req.role === "faculty" ? "default" : "secondary"}>
                         {req.role === "faculty" ? "Faculty" : "Student"}
                       </Badge>
+                    </td>
+                    <td className="px-5 py-4 text-xs font-medium text-foreground">
+                      {req.department || "Computer Engineering"}
                     </td>
                     <td className="px-5 py-4 text-xs text-muted-foreground">
                       {formatRelativeTime(req.createdAt)}

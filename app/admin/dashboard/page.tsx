@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   BarChart3,
   Building2,
@@ -113,6 +113,9 @@ export default function AdminDashboardPage() {
           actions={<Badge variant="secondary">Academic Year 2026-27</Badge>}
         />
 
+        {/* Live User Registration Requests Alert */}
+        <RegistrationRequestsBanner />
+
         <StatTiles items={tiles} />
 
         <div className="grid gap-6 lg:grid-cols-3">
@@ -156,5 +159,107 @@ export default function AdminDashboardPage() {
         />
       </div>
     </PageTransition>
+  );
+}
+
+import Link from "next/link";
+import { CheckCircle2, ShieldAlert, ArrowUpRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
+
+function RegistrationRequestsBanner() {
+  const [requests, setRequests] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [busyId, setBusyId] = useState<string | null>(null);
+
+  async function loadRequests() {
+    try {
+      const res = await fetch("/api/admin/approvals");
+      const data = await res.json();
+      if (data.success && Array.isArray(data.requests)) {
+        setRequests(data.requests.filter((r: any) => r.status === "pending"));
+      }
+    } catch {
+      // ignore
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    void loadRequests();
+  }, []);
+
+  async function handleQuickApprove(id: string) {
+    setBusyId(id);
+    try {
+      const res = await fetch("/api/admin/approvals", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ requestId: id, action: "approve" }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setRequests((prev) => prev.filter((r) => r.id !== id));
+      }
+    } catch {
+      // ignore
+    } finally {
+      setBusyId(null);
+    }
+  }
+
+  if (loading || requests.length === 0) return null;
+
+  return (
+    <div className="bg-warning/10 border border-warning/30 rounded-2xl p-5 shadow-sm space-y-3">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+        <div className="flex items-center gap-2.5">
+          <ShieldAlert className="w-5 h-5 text-warning shrink-0" />
+          <div>
+            <h4 className="text-sm font-bold text-foreground">
+              {requests.length} New User Registration Request{requests.length > 1 ? "s" : ""} Pending Approval
+            </h4>
+            <p className="text-xs text-muted-foreground">
+              New prospective student or faculty members registered on the network and are awaiting credential activation.
+            </p>
+          </div>
+        </div>
+
+        <Link
+          href="/admin/approvals"
+          className="inline-flex items-center gap-1 text-xs font-bold uppercase tracking-wider text-warning hover:underline shrink-0"
+        >
+          <span>Review All in Approvals</span>
+          <ArrowUpRight className="w-3.5 h-3.5" />
+        </Link>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 pt-1">
+        {requests.slice(0, 3).map((req) => (
+          <div
+            key={req.id}
+            className="bg-card border border-border p-3 rounded-xl flex items-center justify-between gap-2 shadow-xs"
+          >
+            <div className="min-w-0 flex-1">
+              <p className="font-semibold text-foreground text-xs truncate">{req.displayName}</p>
+              <p className="text-[11px] text-muted-foreground font-mono truncate">{req.email}</p>
+              <span className="text-[10px] uppercase font-bold text-[#8B1E1E] dark:text-[#FF7575]">
+                {req.role} · {req.department || "CMPN"}
+              </span>
+            </div>
+
+            <Button
+              size="sm"
+              disabled={busyId === req.id}
+              onClick={() => handleQuickApprove(req.id)}
+              className="h-7 text-[11px] px-2.5 bg-success hover:bg-success/90 text-white shrink-0"
+            >
+              <CheckCircle2 className="w-3 h-3 mr-1" />
+              <span>{busyId === req.id ? "Approving…" : "Approve"}</span>
+            </Button>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }

@@ -3,6 +3,8 @@
  * Contains exactly 63 student records, 4 faculty records, 1 admin record, and registration requests store.
  */
 
+import { mvpDb } from "@/lib/supabase/database";
+
 export interface DatabaseUser {
   id: string;
   displayName: string;
@@ -24,6 +26,7 @@ export interface RegistrationRequest {
   displayName: string;
   email: string;
   role: "student" | "faculty";
+  department?: string;
   passwordHash: string;
   status: "pending" | "approved" | "rejected";
   createdAt: string;
@@ -252,6 +255,7 @@ class CentralDatabase {
     displayName: string;
     email: string;
     role: "student" | "faculty";
+    department?: string;
     password: string;
   }): { success: boolean; request?: RegistrationRequest; error?: string } {
     const emailNorm = data.email.trim().toLowerCase();
@@ -289,6 +293,7 @@ class CentralDatabase {
       displayName: data.displayName.trim(),
       email: emailNorm,
       role: data.role,
+      department: data.department || "Computer Engineering",
       passwordHash: data.password,
       status: "pending",
       createdAt: new Date().toISOString(),
@@ -309,6 +314,13 @@ class CentralDatabase {
     req.reviewedBy = adminName;
     req.reviewedAt = new Date().toISOString();
 
+    // Sync into active mvpDb profiles
+    try {
+      mvpDb.createProfile(req.displayName, req.email, req.role);
+    } catch {
+      // ignore if profile exists
+    }
+
     // Create active user in database
     const newUserId = `${req.role.slice(0, 3)}-${String(this.users.size + 1).padStart(3, "0")}`;
     const newUser: DatabaseUser = {
@@ -319,8 +331,8 @@ class CentralDatabase {
       role: req.role,
       status: "active",
       passwordHash: req.passwordHash,
-      department: req.role === "faculty" ? "Computer Engineering" : undefined,
-      programme: req.role === "student" ? "Computer Engineering" : undefined,
+      department: req.role === "faculty" ? (req.department || "Computer Engineering") : undefined,
+      programme: req.role === "student" ? (req.department || "Computer Engineering") : undefined,
       year: req.role === "student" ? "Second Year" : undefined,
       createdAt: new Date().toISOString(),
     };

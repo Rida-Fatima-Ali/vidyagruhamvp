@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
+import { db } from "@/services/database";
 import { mvpDb } from "@/lib/supabase/database";
 import { isAllowedInstitutionEmail, getAllowedEmailDomain } from "@/lib/auth/validation";
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { name, displayName, email, password } = body;
+    const { name, displayName, email, password, role, department } = body;
     const fullName = displayName || name;
 
     if (!fullName || !email || !password) {
@@ -34,28 +35,36 @@ export async function POST(request: Request) {
     }
 
     // 2. Prevent duplicate email accounts
-    const existing = mvpDb.findProfileByEmail(cleanEmail);
-    if (existing) {
+    const existingMvp = mvpDb.findProfileByEmail(cleanEmail);
+    const existingDb = db.findUserByLogin(cleanEmail);
+    if (existingMvp || existingDb) {
       return NextResponse.json(
         { error: "An account with this email address already exists. Please log in." },
         { status: 409 }
       );
     }
 
-    // 3. Security: Default new public registrations strictly to "student"
-    const newProfile = mvpDb.createProfile(fullName, cleanEmail, "student");
+    // 3. Create pending registration request for Admin review and approval
+    const result = db.createRegistrationRequest({
+      displayName: fullName,
+      email: cleanEmail,
+      role: role === "faculty" ? "faculty" : "student",
+      department: department || "Computer Engineering",
+      password,
+    });
+
+    if (!result.success || !result.request) {
+      return NextResponse.json(
+        { error: result.error || "Failed to create registration request." },
+        { status: 400 }
+      );
+    }
 
     return NextResponse.json(
       {
         success: true,
-        message: "Account registered successfully.",
-        user: {
-          id: newProfile.id,
-          name: newProfile.name,
-          displayName: newProfile.name,
-          email: newProfile.email,
-          role: newProfile.role,
-        },
+        message: "Registration submitted successfully. Awaiting administrator approval.",
+        request: result.request,
       },
       { status: 201 }
     );
