@@ -16,7 +16,9 @@ import {
   ShieldCheck,
   Building,
 } from "lucide-react";
-import { Brand } from "@/components/layout/brand";
+import { VidyaGruhaWordmark } from "@/components/common/vidyagruha-wordmark";
+import { ThemeToggle } from "@/components/navigation/theme-toggle";
+import { cn } from "@/utils/cn";
 
 type SignupRole = "student" | "faculty";
 
@@ -65,6 +67,7 @@ export default function SignupPage() {
           email: cleanEmail,
           role: selectedRole,
           password,
+          department: dept,
         }),
       });
 
@@ -86,35 +89,27 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="min-h-screen w-full bg-[#FAF9F5] text-[#28251D] flex flex-col justify-between selection:bg-[#8B1E1E] selection:text-[#FAF9F5]">
+    <div className="min-h-screen w-full bg-background text-foreground flex flex-col justify-between selection:bg-[#8B1E1E] selection:text-[#FAF9F5] transition-colors duration-300">
       {/* Top Navbar */}
-      <header className="w-full bg-[#FAF9F5]/90 backdrop-blur-md border-b border-[#28251D]/08 sticky top-0 z-30">
+      <header className="w-full bg-background/90 backdrop-blur-md border-b border-border sticky top-0 z-30">
         <div className="max-w-[1300px] mx-auto px-6 sm:px-10 h-20 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="relative h-10 w-44 sm:w-52 flex items-center">
-              <Image
-                src="/vidyagruha-logo.png"
-                alt="VidyaGruha"
-                width={220}
-                height={55}
-                priority
-                className="object-contain object-left h-9 w-auto transition-opacity duration-200 group-hover:opacity-85"
-              />
-            </div>
+            <VidyaGruhaWordmark size="md" subtitle={false} />
           </Link>
 
           <div className="flex items-center gap-4">
+            <ThemeToggle />
             <Link
               href="/login"
-              className="text-[12px] font-medium tracking-[0.14em] uppercase text-[#77736B] hover:text-[#28251D] transition-colors"
+              className="text-[12px] font-semibold tracking-[0.14em] uppercase text-foreground hover:text-[#8B1E1E] transition-colors"
             >
               Sign In
             </Link>
             <Link
               href="/explore"
-              className="hidden sm:inline-flex items-center gap-1 px-4 py-2 rounded-full border border-[#28251D]/15 text-[11px] font-semibold tracking-[0.14em] uppercase text-[#28251D] hover:bg-[#28251D] hover:text-[#FAF9F5] transition-all"
+              className="hidden sm:inline-flex items-center gap-1 px-4 py-2 rounded-full border border-border text-[11px] font-semibold tracking-[0.14em] uppercase text-foreground hover:bg-[#8B1E1E] hover:text-[#FAF9F5] transition-all"
             >
-              Explore Tour
+              Explore
             </Link>
           </div>
         </div>
@@ -134,110 +129,94 @@ export default function SignupPage() {
               className="max-w-3xl mx-auto w-full"
             >
               <div className="text-center mb-10">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#8B1E1E]/08 border border-[#8B1E1E]/15 text-[11px] font-semibold tracking-[0.2em] uppercase text-[#8B1E1E] mb-3">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#8B1E1E]/08 dark:bg-[#FF5C5C]/15 border border-[#8B1E1E]/15 dark:border-[#FF5C5C]/25 text-[11px] font-semibold tracking-[0.2em] uppercase text-[#8B1E1E] dark:text-[#FF7575] mb-3">
                   <span>Create Your Account</span>
                 </div>
-                <h1 className="text-[2.5rem] sm:text-[3.25rem] font-normal leading-[1.08] tracking-[-0.02em] font-serif text-[#1C1917] mb-3">
-                  Join VidyaGruha
+                <h1 className="text-[2.5rem] sm:text-[3.25rem] font-normal leading-[1.08] tracking-[-0.02em] font-serif text-foreground mb-3">
+                  Join Your Institutional Portal
                 </h1>
-                <p className="text-[15px] text-[#77736B] leading-[1.6]">
-                  Select your institutional affiliation to begin registration.
+                <p className="text-sm text-muted-foreground max-w-md mx-auto">
+                  Select your academic role to proceed with registration on the Somaiya VidyaGruha network.
                 </p>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                {/* Student Option */}
-                <div
+                {/* Student Card */}
+                <button
+                  type="button"
                   onClick={() => setSelectedRole("student")}
-                  className="group relative bg-[#FDFCFB] border border-[#28251D]/12 hover:border-[#8B1E1E]/50 rounded-2xl p-8 flex flex-col justify-between shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer"
+                  className="group relative bg-card border border-border hover:border-[#8B1E1E] dark:hover:border-[#FF5C5C] rounded-2xl p-8 text-left transition-all duration-300 hover:shadow-lg flex flex-col justify-between cursor-pointer"
                 >
+                  <div className="w-14 h-14 rounded-2xl bg-[#8B1E1E]/08 dark:bg-[#FF5C5C]/15 text-[#8B1E1E] dark:text-[#FF7575] flex items-center justify-center mb-6 group-hover:scale-105 transition-transform">
+                    <GraduationCap className="w-7 h-7" />
+                  </div>
                   <div>
-                    <div className="w-12 h-12 rounded-xl bg-[#8B1E1E]/08 border border-[#8B1E1E]/15 flex items-center justify-center text-[#8B1E1E] group-hover:bg-[#8B1E1E] group-hover:text-white transition-all mb-6">
-                      <GraduationCap className="w-6 h-6" />
-                    </div>
-                    <h2 className="text-2xl font-serif text-[#1C1917] mb-2 group-hover:text-[#8B1E1E] transition-colors">
-                      Student
-                    </h2>
-                    <p className="text-xs font-semibold tracking-[0.14em] uppercase text-[#77736B] mb-3">
-                      Enrolled Learners
-                    </p>
-                    <p className="text-sm text-[#77736B] leading-relaxed">
-                      Access lecture schedules, mark attendance, submit assignments, and engage in peer doubt threads.
+                    <h3 className="text-xl font-serif text-foreground mb-2 group-hover:text-[#8B1E1E] dark:group-hover:text-[#FF7575] transition-colors">
+                      Student Access
+                    </h3>
+                    <p className="text-xs text-muted-foreground leading-relaxed mb-6">
+                      For undergraduate & postgraduate students. Access timetables, live attendance records, syllabus tracking, and submission portals.
                     </p>
                   </div>
-                  <div className="mt-8 pt-4 border-t border-[#28251D]/08 flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-[#1C1917] group-hover:text-[#8B1E1E]">
+                  <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#8B1E1E] dark:text-[#FF7575]">
                     <span>Continue as Student</span>
-                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                    <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
                   </div>
-                </div>
+                </button>
 
-                {/* Faculty Option */}
-                <div
+                {/* Faculty Card */}
+                <button
+                  type="button"
                   onClick={() => setSelectedRole("faculty")}
-                  className="group relative bg-[#FDFCFB] border border-[#28251D]/12 hover:border-[#8B1E1E]/50 rounded-2xl p-8 flex flex-col justify-between shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer"
+                  className="group relative bg-card border border-border hover:border-[#8B1E1E] dark:hover:border-[#FF5C5C] rounded-2xl p-8 text-left transition-all duration-300 hover:shadow-lg flex flex-col justify-between cursor-pointer"
                 >
+                  <div className="w-14 h-14 rounded-2xl bg-secondary text-foreground flex items-center justify-center mb-6 group-hover:scale-105 transition-transform">
+                    <Users className="w-7 h-7" />
+                  </div>
                   <div>
-                    <div className="w-12 h-12 rounded-xl bg-[#01696f]/08 border border-[#01696f]/15 flex items-center justify-center text-[#01696f] group-hover:bg-[#01696f] group-hover:text-white transition-all mb-6">
-                      <Users className="w-6 h-6" />
-                    </div>
-                    <h2 className="text-2xl font-serif text-[#1C1917] mb-2 group-hover:text-[#01696f] transition-colors">
-                      Faculty
-                    </h2>
-                    <p className="text-xs font-semibold tracking-[0.14em] uppercase text-[#77736B] mb-3">
-                      Professors & Instructors
-                    </p>
-                    <p className="text-sm text-[#77736B] leading-relaxed">
-                      Take attendance with 6-second undo, review cover requests, verify doubt resolutions, and grade coursework.
+                    <h3 className="text-xl font-serif text-foreground mb-2 group-hover:text-[#8B1E1E] dark:group-hover:text-[#FF7575] transition-colors">
+                      Faculty Member
+                    </h3>
+                    <p className="text-xs text-muted-foreground leading-relaxed mb-6">
+                      For professors, lecturers, and lab instructors. Take attendance with 6s undo, review coursework, manage schedules, and coordinate cover requests.
                     </p>
                   </div>
-                  <div className="mt-8 pt-4 border-t border-[#28251D]/08 flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-[#1C1917] group-hover:text-[#01696f]">
+                  <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-foreground group-hover:text-[#8B1E1E] dark:group-hover:text-[#FF7575] transition-colors">
                     <span>Continue as Faculty</span>
-                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                    <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
                   </div>
-                </div>
-              </div>
-
-              <div className="text-center mt-10">
-                <p className="text-xs text-[#77736B]">
-                  Already have an account?{" "}
-                  <Link href="/login" className="font-semibold text-[#8B1E1E] hover:underline">
-                    Sign in here
-                  </Link>
-                </p>
+                </button>
               </div>
             </motion.div>
           )}
 
-          {/* STEP 2: CREDENTIAL FORM */}
+          {/* STEP 2: FILL REGISTRATION FORM */}
           {selectedRole && !submitted && (
             <motion.div
-              key="credential-form"
+              key="registration-form"
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -16 }}
               transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-              className="max-w-xl mx-auto w-full bg-[#FDFCFB] border border-[#28251D]/12 rounded-2xl p-8 sm:p-10 shadow-sm"
+              className="max-w-md mx-auto w-full bg-card border border-border rounded-2xl p-8 sm:p-10 shadow-sm"
             >
               <button
                 type="button"
-                onClick={() => {
-                  setSelectedRole(null);
-                  setError(null);
-                }}
-                className="inline-flex items-center gap-1.5 text-xs font-semibold tracking-wider uppercase text-[#77736B] hover:text-[#1C1917] mb-6 transition-colors"
+                onClick={() => setSelectedRole(null)}
+                className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground mb-6 transition-colors"
               >
                 <ArrowLeft className="w-3.5 h-3.5" />
-                <span>Change Role</span>
+                <span>Change role</span>
               </button>
 
               <div className="mb-6">
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#8B1E1E]/08 border border-[#8B1E1E]/15 text-[11px] font-semibold tracking-wider uppercase text-[#8B1E1E] mb-2">
-                  <span>{selectedRole === "student" ? "Student" : "Faculty"} Registration</span>
+                <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#8B1E1E]/08 dark:bg-[#FF5C5C]/15 text-[#8B1E1E] dark:text-[#FF7575] text-[10px] font-bold uppercase tracking-wider mb-2">
+                  {selectedRole === "student" ? "Student Registration" : "Faculty Registration"}
                 </div>
-                <h2 className="text-3xl font-serif text-[#1C1917]">
-                  Enter your credentials
+                <h2 className="text-2xl font-serif text-foreground">
+                  Complete Your Profile
                 </h2>
-                <p className="mt-1 text-xs text-[#77736B]">
+                <p className="mt-1 text-xs text-muted-foreground">
                   Use your institutional Somaiya credentials for validation.
                 </p>
               </div>
@@ -251,7 +230,7 @@ export default function SignupPage() {
 
               <form onSubmit={handleRegister} className="space-y-4">
                 <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-[#77736B] mb-1.5">
+                  <label className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1.5">
                     Full Display Name
                   </label>
                   <input
@@ -260,15 +239,15 @@ export default function SignupPage() {
                     value={displayName}
                     onChange={(e) => setDisplayName(e.target.value)}
                     placeholder="e.g. Lakshya Choithani"
-                    className="w-full rounded-xl border border-[#28251D]/15 bg-[#FAF9F5] px-4 py-3 text-sm text-[#1C1917] outline-none focus:border-[#8B1E1E] focus:ring-1 focus:ring-[#8B1E1E] transition-all"
+                    className="w-full rounded-xl border border-border dark:border-white/15 bg-white/70 dark:bg-white/[0.06] backdrop-blur-md px-4 py-3 text-sm text-[#1C1917] dark:text-[#FAF9F5] placeholder:text-muted-foreground/50 outline-none focus:border-[#8B1E1E] dark:focus:border-[#FF5C5C] focus:bg-white/90 dark:focus:bg-white/[0.1] focus:ring-1 focus:ring-[#8B1E1E] transition-all shadow-inner"
                   />
-                  <p className="mt-1 text-[11px] text-[#A9A59D]">
+                  <p className="mt-1 text-[11px] text-muted-foreground">
                     This is your human-readable name shown across the dashboard.
                   </p>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-[#77736B] mb-1.5">
+                  <label className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1.5">
                     Somaiya Email Address
                   </label>
                   <input
@@ -277,15 +256,15 @@ export default function SignupPage() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="e.g. yourname@somaiya.edu"
-                    className="w-full rounded-xl border border-[#28251D]/15 bg-[#FAF9F5] px-4 py-3 text-sm text-[#1C1917] outline-none focus:border-[#8B1E1E] focus:ring-1 focus:ring-[#8B1E1E] transition-all"
+                    className="w-full rounded-xl border border-border dark:border-white/15 bg-white/70 dark:bg-white/[0.06] backdrop-blur-md px-4 py-3 text-sm text-[#1C1917] dark:text-[#FAF9F5] placeholder:text-muted-foreground/50 outline-none focus:border-[#8B1E1E] dark:focus:border-[#FF5C5C] focus:bg-white/90 dark:focus:bg-white/[0.1] focus:ring-1 focus:ring-[#8B1E1E] transition-all shadow-inner"
                   />
-                  <p className="mt-1 text-[11px] text-[#A9A59D]">
-                    Must end with <code className="text-[#8B1E1E]">@somaiya.edu</code>
+                  <p className="mt-1 text-[11px] text-muted-foreground">
+                    Must end with <code className="text-[#8B1E1E] dark:text-[#FF5C5C]">@somaiya.edu</code>
                   </p>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-[#77736B] mb-1.5">
+                  <label className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1.5">
                     Password
                   </label>
                   <input
@@ -294,23 +273,26 @@ export default function SignupPage() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Minimum 6 characters"
-                    className="w-full rounded-xl border border-[#28251D]/15 bg-[#FAF9F5] px-4 py-3 text-sm text-[#1C1917] outline-none focus:border-[#8B1E1E] focus:ring-1 focus:ring-[#8B1E1E] transition-all"
+                    className="w-full rounded-xl border border-border dark:border-white/15 bg-white/70 dark:bg-white/[0.06] backdrop-blur-md px-4 py-3 text-sm text-[#1C1917] dark:text-[#FAF9F5] placeholder:text-muted-foreground/50 outline-none focus:border-[#8B1E1E] dark:focus:border-[#FF5C5C] focus:bg-white/90 dark:focus:bg-white/[0.1] focus:ring-1 focus:ring-[#8B1E1E] transition-all shadow-inner"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-[#77736B] mb-1.5">
+                  <label className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1.5">
                     Department / Programme
                   </label>
                   <select
                     value={dept}
                     onChange={(e) => setDept(e.target.value)}
-                    className="w-full rounded-xl border border-[#28251D]/15 bg-[#FAF9F5] px-4 py-3 text-sm text-[#1C1917] outline-none focus:border-[#8B1E1E] transition-all"
+                    className="w-full rounded-xl border border-border dark:border-white/15 bg-white/70 dark:bg-card backdrop-blur-md px-4 py-3 text-sm text-[#1C1917] dark:text-[#FAF9F5] outline-none focus:border-[#8B1E1E] dark:focus:border-[#FF5C5C] transition-all cursor-pointer"
                   >
                     <option value="Computer Engineering">Computer Engineering</option>
+                    <option value="Mechanical Engineering">Mechanical Engineering</option>
+                    <option value="Industrial Engineering">Industrial Engineering</option>
+                    <option value="Electronics Engineering">Electronics Engineering</option>
                     <option value="Information Technology">Information Technology</option>
-                    <option value="Electronics & Telecomm">Electronics & Telecommunication</option>
-                    <option value="Artificial Intelligence">Artificial Intelligence & Data Science</option>
+                    <option value="Electronics & Telecommunication">Electronics & Telecommunication</option>
+                    <option value="Artificial Intelligence & Data Science">Artificial Intelligence & Data Science</option>
                   </select>
                 </div>
 
@@ -318,7 +300,7 @@ export default function SignupPage() {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl bg-[#1C1917] hover:bg-[#8B1E1E] text-white text-xs font-semibold uppercase tracking-widest transition-all duration-300 disabled:opacity-50"
+                    className="w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl bg-[#1C1917] dark:bg-[#FAF9F5] hover:bg-[#8B1E1E] dark:hover:bg-[#8B1E1E] text-white dark:text-[#1C1917] dark:hover:text-white text-xs font-semibold uppercase tracking-widest transition-all duration-300 disabled:opacity-50 cursor-pointer shadow-sm"
                   >
                     {loading ? (
                       <span>Submitting Request...</span>
@@ -341,60 +323,61 @@ export default function SignupPage() {
               initial={{ opacity: 0, scale: 0.96 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-              className="max-w-xl mx-auto w-full bg-[#FDFCFB] border border-[#28251D]/12 rounded-2xl p-8 sm:p-10 text-center shadow-sm"
+              className="max-w-xl mx-auto w-full bg-card border border-border rounded-2xl p-8 sm:p-10 text-center shadow-sm"
             >
               <div className="w-16 h-16 rounded-full bg-warning/10 text-warning border border-warning/20 mx-auto flex items-center justify-center mb-6">
                 <Clock className="w-8 h-8" />
               </div>
 
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-warning/10 border border-warning/20 text-[11px] font-semibold tracking-wider uppercase text-warning mb-3">
-                <span>Request Submitted</span>
+                <span>Account Awaiting Verification</span>
               </div>
 
-              <h2 className="text-3xl font-serif text-[#1C1917] mb-3">
-                Pending Approval
+              <h2 className="text-2xl sm:text-3xl font-serif text-foreground mb-3">
+                Registration Request Submitted
               </h2>
 
-              <p className="text-sm text-[#77736B] leading-relaxed mb-6">
-                Thank you, <strong>{displayName}</strong>. Your registration request for{" "}
-                <code className="bg-[#FAF9F5] px-1.5 py-0.5 rounded border border-[#28251D]/10 text-[#8B1E1E]">
-                  {email}
-                </code>{" "}
-                has been submitted for administrative review.
+              <p className="text-xs text-muted-foreground leading-relaxed max-w-md mx-auto mb-6">
+                Your account registration for <strong className="text-foreground">{displayName}</strong> has been logged. In accordance with Somaiya campus governance, institutional accounts undergo approval before credentials activate.
               </p>
 
-              <div className="bg-[#FAF9F5] border border-[#28251D]/08 rounded-xl p-4 text-left text-xs text-[#77736B] space-y-1.5 mb-8">
-                <div className="flex justify-between">
-                  <span className="text-[#A9A59D]">Account Type:</span>
-                  <span className="font-semibold text-[#1C1917] capitalize">{selectedRole}</span>
+              {submittedRequest && (
+                <div className="bg-secondary/50 border border-border rounded-xl p-4 text-left text-xs space-y-2 mb-8 max-w-md mx-auto">
+                  <div className="flex justify-between border-b border-border pb-1.5">
+                    <span className="text-muted-foreground">Request ID:</span>
+                    <span className="font-mono font-medium text-foreground">{submittedRequest.id}</span>
+                  </div>
+                  <div className="flex justify-between border-b border-border pb-1.5">
+                    <span className="text-muted-foreground">Email:</span>
+                    <span className="font-medium text-foreground">{submittedRequest.email}</span>
+                  </div>
+                  <div className="flex justify-between border-b border-border pb-1.5">
+                    <span className="text-muted-foreground">Role:</span>
+                    <span className="font-semibold uppercase text-[#8B1E1E] dark:text-[#FF7575]">{submittedRequest.role}</span>
+                  </div>
+                  <div className="flex justify-between border-b border-border pb-1.5">
+                    <span className="text-muted-foreground">Department:</span>
+                    <span className="font-medium text-foreground">{dept}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Status:</span>
+                    <span className="text-warning font-semibold">Pending Admin Review</span>
+                  </div>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-[#A9A59D]">Display Name:</span>
-                  <span className="font-semibold text-[#1C1917]">{displayName}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-[#A9A59D]">Status:</span>
-                  <span className="font-semibold text-warning">Pending Admin Approval</span>
-                </div>
-              </div>
+              )}
 
-              <p className="text-xs text-[#A9A59D] mb-8">
-                Once the administrator approves your account, you will be able to log in immediately.
-              </p>
-
-              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
                 <Link
                   href="/login"
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-[#1C1917] hover:bg-[#8B1E1E] text-white text-xs font-semibold uppercase tracking-wider transition-all"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-[#1C1917] dark:bg-[#FAF9F5] hover:bg-[#8B1E1E] dark:hover:bg-[#8B1E1E] text-white dark:text-[#1C1917] dark:hover:text-white text-xs font-semibold tracking-wider uppercase transition-all"
                 >
-                  <span>Go to Sign In</span>
-                  <ArrowRight className="w-4 h-4" />
+                  <span>Return to Sign In</span>
                 </Link>
                 <Link
                   href="/"
-                  className="inline-flex items-center justify-center px-6 py-3 rounded-xl border border-[#28251D]/15 text-[#28251D] text-xs font-semibold uppercase tracking-wider hover:bg-[#FAF9F5] transition-all"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl border border-border text-xs font-semibold tracking-wider uppercase text-foreground hover:bg-secondary transition-all"
                 >
-                  <span>Return to Home</span>
+                  <span>Home</span>
                 </Link>
               </div>
             </motion.div>
@@ -403,16 +386,19 @@ export default function SignupPage() {
       </main>
 
       {/* Footer */}
-      <footer className="w-full max-w-[1300px] mx-auto px-6 sm:px-10 py-6 border-t border-[#28251D]/08 flex flex-col sm:flex-row items-center justify-between text-[11px] text-[#A9A59D] tracking-wider uppercase">
+      <footer className="w-full max-w-[1300px] mx-auto px-6 sm:px-10 py-6 border-t border-border flex flex-col sm:flex-row items-center justify-between text-[11px] text-muted-foreground tracking-wider uppercase">
         <div>
-          <span>VidyaGruha</span> · <span>Identity & Registration</span>
+          <span>VidyaGruha</span> · <span>Institutional Registration Portal</span>
         </div>
         <div className="flex items-center gap-6 mt-2 sm:mt-0">
-          <Link href="/login" className="hover:text-[#28251D] transition-colors">
-            Sign In Portal
+          <Link href="/" className="hover:text-foreground transition-colors">
+            Home
           </Link>
-          <Link href="/explore" className="hover:text-[#28251D] transition-colors">
-            Explore Experience
+          <Link href="/login" className="hover:text-foreground transition-colors">
+            Sign In
+          </Link>
+          <Link href="/explore" className="hover:text-foreground transition-colors">
+            Explore
           </Link>
         </div>
       </footer>

@@ -220,7 +220,7 @@ export default function LoginPage() {
           {/* Login Form */}
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-[#77736B] mb-1.5">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1.5">
                 {role === "admin" ? "Username" : "Email / Username"}
               </label>
               <div className="relative">
@@ -230,19 +230,19 @@ export default function LoginPage() {
                   value={identifier}
                   onChange={(e) => setIdentifier(e.target.value)}
                   placeholder={ROLES.find((r) => r.id === role)?.hint}
-                  className="w-full rounded-xl border border-[#28251D]/15 bg-[#FAF9F5] pl-10 pr-4 py-3 text-sm text-[#1C1917] outline-none focus:border-[#8B1E1E] focus:ring-1 focus:ring-[#8B1E1E] transition-all"
+                  className="w-full rounded-xl border border-border dark:border-white/15 bg-white/70 dark:bg-white/[0.06] backdrop-blur-md pl-10 pr-4 py-3 text-sm text-[#1C1917] dark:text-[#FAF9F5] placeholder:text-muted-foreground/50 outline-none focus:border-[#8B1E1E] dark:focus:border-[#FF5C5C] focus:bg-white/90 dark:focus:bg-white/[0.1] focus:ring-1 focus:ring-[#8B1E1E] dark:focus:ring-[#FF5C5C] transition-all shadow-inner"
                 />
-                <Mail className="w-4 h-4 text-[#A9A59D] absolute left-3.5 top-3.5" />
+                <Mail className="w-4 h-4 text-muted-foreground absolute left-3.5 top-3.5" />
               </div>
               {role !== "admin" && (
-                <p className="mt-1 text-[11px] text-[#A9A59D]">
-                  Must end with <code className="text-[#8B1E1E]">@somaiya.edu</code>
+                <p className="mt-1 text-[11px] text-muted-foreground">
+                  Must end with <code className="text-[#8B1E1E] dark:text-[#FF5C5C]">@somaiya.edu</code>
                 </p>
               )}
             </div>
 
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-[#77736B] mb-1.5">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1.5">
                 Password
               </label>
               <div className="relative">
@@ -252,9 +252,9 @@ export default function LoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter password"
-                  className="w-full rounded-xl border border-[#28251D]/15 bg-[#FAF9F5] pl-10 pr-4 py-3 text-sm text-[#1C1917] outline-none focus:border-[#8B1E1E] focus:ring-1 focus:ring-[#8B1E1E] transition-all"
+                  className="w-full rounded-xl border border-border dark:border-white/15 bg-white/70 dark:bg-white/[0.06] backdrop-blur-md pl-10 pr-4 py-3 text-sm text-[#1C1917] dark:text-[#FAF9F5] placeholder:text-muted-foreground/50 outline-none focus:border-[#8B1E1E] dark:focus:border-[#FF5C5C] focus:bg-white/90 dark:focus:bg-white/[0.1] focus:ring-1 focus:ring-[#8B1E1E] dark:focus:ring-[#FF5C5C] transition-all shadow-inner"
                 />
-                <Lock className="w-4 h-4 text-[#A9A59D] absolute left-3.5 top-3.5" />
+                <Lock className="w-4 h-4 text-muted-foreground absolute left-3.5 top-3.5" />
               </div>
             </div>
 
@@ -262,7 +262,7 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl bg-[#1C1917] hover:bg-[#8B1E1E] text-white text-xs font-semibold uppercase tracking-widest transition-all duration-300 disabled:opacity-50"
+                className="w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl bg-[#1C1917] dark:bg-[#FAF9F5] hover:bg-[#8B1E1E] dark:hover:bg-[#8B1E1E] text-white dark:text-[#1C1917] dark:hover:text-white text-xs font-semibold uppercase tracking-widest transition-all duration-300 disabled:opacity-50 cursor-pointer shadow-sm"
               >
                 {loading ? (
                   <span>Authenticating...</span>
@@ -277,35 +277,45 @@ export default function LoginPage() {
           </form>
 
           {/* Quick Preset Selector for Easy Testing */}
-          <div className="mt-8 pt-6 border-t border-[#28251D]/08">
-            <p className="text-[10px] font-mono uppercase tracking-wider text-[#A9A59D] mb-2.5 text-center">
+          <div className="mt-8 pt-6 border-t border-border">
+            <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground mb-2.5 text-center">
               Quick Prototype Credential Presets:
             </p>
             <div className="flex flex-wrap gap-1.5 justify-center">
-              {PRESET_ACCOUNTS.filter((a) => a.role === role).map((acc) => (
-                <button
-                  key={acc.email}
-                  type="button"
-                  onClick={() => {
-                    setIdentifier(acc.email);
-                    setPassword("kjsp@123");
-                  }}
-                  className={`text-[11px] px-2.5 py-1 rounded-md border transition-colors ${
-                    identifier === acc.email
-                      ? "bg-[#8B1E1E]/10 border-[#8B1E1E] text-[#8B1E1E] font-medium"
-                      : "bg-[#FAF9F5] border-[#28251D]/10 text-[#77736B] hover:text-[#1C1917]"
-                  }`}
-                >
-                  {acc.name.split(" ")[0]}
-                </button>
-              ))}
+              {PRESET_ACCOUNTS.filter((a) => a.role === role).map((acc) => {
+                const isSelected = identifier === acc.email;
+                let label = acc.name.split(" ")[0];
+                if (acc.email === "nrp@somaiya.edu") label = "NRP (LAN)";
+                if (acc.email === "rnp@somaiya.edu") label = "RNP (CN)";
+                if (acc.email === "charu@somaiya.edu") label = "Charu (MP)";
+                if (acc.email === "varshakinge@somaiya.edu") label = "Varsha (Python)";
+
+                return (
+                  <button
+                    key={acc.email}
+                    type="button"
+                    onClick={() => {
+                      setIdentifier(acc.email);
+                      setPassword("kjsp@123");
+                    }}
+                    className={cn(
+                      "text-[11px] px-2.5 py-1 rounded-lg border transition-all cursor-pointer",
+                      isSelected
+                        ? "bg-[#8B1E1E]/10 dark:bg-[#FF5C5C]/20 border-[#8B1E1E] dark:border-[#FF5C5C] text-[#8B1E1E] dark:text-[#FF7575] font-semibold"
+                        : "bg-secondary/60 dark:bg-white/[0.04] border-border dark:border-white/10 text-muted-foreground hover:text-foreground hover:bg-secondary"
+                    )}
+                  >
+                    {label}
+                  </button>
+                );
+              })}
             </div>
           </div>
 
           {/* Link to Sign Up */}
-          <div className="text-center mt-6 text-xs text-[#77736B]">
+          <div className="text-center mt-6 text-xs text-muted-foreground">
             Need a new account?{" "}
-            <Link href="/signup" className="font-semibold text-[#8B1E1E] hover:underline">
+            <Link href="/signup" className="font-semibold text-[#8B1E1E] dark:text-[#FF5C5C] hover:underline">
               Submit registration request
             </Link>
           </div>
@@ -313,18 +323,18 @@ export default function LoginPage() {
       </main>
 
       {/* Footer */}
-      <footer className="w-full max-w-[1300px] mx-auto px-6 sm:px-10 py-6 border-t border-[#28251D]/08 flex flex-col sm:flex-row items-center justify-between text-[11px] text-[#A9A59D] tracking-wider uppercase">
+      <footer className="w-full max-w-[1300px] mx-auto px-6 sm:px-10 py-6 border-t border-border flex flex-col sm:flex-row items-center justify-between text-[11px] text-muted-foreground tracking-wider uppercase">
         <div>
           <span>VidyaGruha</span> · <span>Authentication & Access Portal</span>
         </div>
         <div className="flex items-center gap-6 mt-2 sm:mt-0">
-          <Link href="/" className="hover:text-[#28251D] transition-colors">
+          <Link href="/" className="hover:text-foreground transition-colors">
             Home
           </Link>
-          <Link href="/signup" className="hover:text-[#28251D] transition-colors">
+          <Link href="/signup" className="hover:text-foreground transition-colors">
             Sign Up
           </Link>
-          <Link href="/explore" className="hover:text-[#28251D] transition-colors">
+          <Link href="/explore" className="hover:text-foreground transition-colors">
             Explore
           </Link>
         </div>

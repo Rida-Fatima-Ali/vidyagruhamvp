@@ -20,9 +20,27 @@ export function facultyFor(code: string): string {
   return getAcademicSubject(code)?.facultyName ?? "";
 }
 
+const FACULTY_ALIASES: Record<string, string[]> = {
+  NRP: ["NRP", "Niti Patel", "Prof. NRP", "Prof. Niti Patel"],
+  "Niti Patel": ["NRP", "Niti Patel", "Prof. NRP", "Prof. Niti Patel"],
+  RNP: ["RNP", "Rupali Patil", "Prof. RNP", "Prof. Rupali Patil"],
+  "Rupali Patil": ["RNP", "Rupali Patil", "Prof. RNP", "Prof. Rupali Patil"],
+  Charu: ["Charu", "Charulata Ingle", "Prof. Charu", "Prof. Charulata Ingle"],
+  "Charulata Ingle": ["Charu", "Charulata Ingle", "Prof. Charu", "Prof. Charulata Ingle"],
+  "Varsha Kinge": ["Varsha Kinge", "Prof. Varsha Kinge"],
+  "Snehal Suryavanshi": ["Snehal Suryavanshi", "Prof. Snehal Suryavanshi"],
+};
+
 /** Whether a faculty member is the assigned instructor for a subject code. */
 export function ownedByFaculty(code: string, facultyName: string): boolean {
-  return facultyFor(code) === facultyName;
+  const canonical = facultyFor(code);
+  if (canonical === facultyName) return true;
+  const aliases = FACULTY_ALIASES[facultyName] ?? [facultyName];
+  return aliases.some(
+    (alias) =>
+      alias.toLowerCase() === canonical.toLowerCase() ||
+      canonical.toLowerCase().includes(alias.toLowerCase()),
+  );
 }
 
 export function overridesForDate(dateISO: string): ScheduleOverride[] {

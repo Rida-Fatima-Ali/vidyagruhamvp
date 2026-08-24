@@ -88,6 +88,36 @@ const ASSIGNMENTS: FacultyAssignment[] = [
     publishedAt: "2026-08-13T09:00:00",
     maxMarks: 10,
   },
+  {
+    id: "as-lan-2",
+    title: "DHCP & DNS Server Deployment Lab",
+    description: "Configuring BIND9 DNS service and ISC-DHCP server on Debian.",
+    code: "CMPN308",
+    subject: "LAN Lab",
+    dueDate: "2026-08-25T17:00:00",
+    publishedAt: "2026-08-10T10:00:00",
+    maxMarks: 15,
+  },
+  {
+    id: "as-cn-2",
+    title: "TCP Congestion Control & Flow Analysis",
+    description: "Wireshark packet capture analysis of TCP Reno and Cubic congestion windows.",
+    code: "CMPN303",
+    subject: "CN (Computer Networks)",
+    dueDate: "2026-08-26T23:59:00",
+    publishedAt: "2026-08-12T09:00:00",
+    maxMarks: 20,
+  },
+  {
+    id: "as-mp-2",
+    title: "Interfacing 8255 PPI with 8086",
+    description: "Design logic and assembly program for Mode 0/Mode 1 stepper motor control.",
+    code: "CMPN304",
+    subject: "Microprocessor",
+    dueDate: "2026-08-27T17:00:00",
+    publishedAt: "2026-08-11T12:00:00",
+    maxMarks: 20,
+  },
 ];
 
 type SubmissionSeed = Record<string, FacultySubmission["status"] | undefined>;
@@ -113,15 +143,14 @@ function buildSubmissions(assignmentId: string, seed: SubmissionSeed): FacultySu
 }
 
 const SUBMISSIONS: FacultySubmission[] = [
-  // Demo student across every subject (reproduces the pre-existing statuses).
+  // Demo student across every subject
   { id: "sub-as-1-stu-001", assignmentId: "as-1", studentId: "stu-001", studentName: "Lakshya Choithani", rollNo: "01", group: "CMPN-A · Sem 3", status: "pending" },
   { id: "sub-as-2-stu-001", assignmentId: "as-2", studentId: "stu-001", studentName: "Lakshya Choithani", rollNo: "01", group: "CMPN-A · Sem 3", status: "pending" },
   { id: "sub-as-3-stu-001", assignmentId: "as-3", studentId: "stu-001", studentName: "Lakshya Choithani", rollNo: "01", group: "CMPN-A · Sem 3", status: "missing" },
   { id: "sub-as-4-stu-001", assignmentId: "as-4", studentId: "stu-001", studentName: "Lakshya Choithani", rollNo: "01", group: "CMPN-A · Sem 3", status: "submitted", submittedAt: "2026-08-08T20:10:00", grade: 17 },
   { id: "sub-as-5-stu-001", assignmentId: "as-5", studentId: "stu-001", studentName: "Lakshya Choithani", rollNo: "01", group: "CMPN-A · Sem 3", status: "pending" },
-  // Full two-batch submissions for the demo faculty's Python Lab assignments
-  // (stu-001's rows live in the seed — submitted for Experiment 6, pending for
-  // the lab report — so the student feed stays consistent with the roster).
+  
+  // Python Lab Submissions (Varsha Kinge)
   ...buildSubmissions("as-py-1", {
     "03": "pending", "09": "pending", "23": "pending", "29": "pending",
     "04": "missing", "20": "missing",
@@ -130,6 +159,33 @@ const SUBMISSIONS: FacultySubmission[] = [
     "01": "pending",
     "07": "pending", "24": "pending", "32": "pending",
     "11": "missing", "14": "missing", "27": "missing",
+  }),
+
+  // LAN Submissions (NRP / Niti Patel)
+  ...buildSubmissions("as-3", {
+    "01": "missing", "05": "pending", "12": "pending", "19": "pending",
+    "08": "missing", "22": "missing",
+  }),
+  ...buildSubmissions("as-lan-2", {
+    "02": "pending", "06": "pending", "15": "pending", "28": "pending",
+  }),
+
+  // CN Submissions (RNP / Rupali Patil)
+  ...buildSubmissions("as-2", {
+    "01": "pending", "04": "pending", "10": "pending", "18": "pending",
+    "14": "missing", "25": "missing",
+  }),
+  ...buildSubmissions("as-cn-2", {
+    "03": "pending", "08": "pending", "17": "pending", "30": "pending",
+  }),
+
+  // MP / Microprocessor Submissions (Charu / Charulata Ingle)
+  ...buildSubmissions("as-4", {
+    "02": "pending", "07": "pending", "13": "pending", "21": "pending",
+    "09": "missing", "26": "missing",
+  }),
+  ...buildSubmissions("as-mp-2", {
+    "01": "pending", "05": "pending", "11": "pending", "24": "pending",
   }),
 ];
 
