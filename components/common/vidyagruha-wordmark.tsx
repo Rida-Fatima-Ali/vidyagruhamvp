@@ -24,15 +24,15 @@ export function VidyaGruhaWordmark({
   return (
     <div className={cn("inline-flex flex-col items-start select-none", className)}>
       <div className={cn("flex items-baseline gap-1 font-serif tracking-tight", sizeClasses[size])}>
-        <span className="font-bold text-[#8B1E1E] dark:text-[#E53E3E]">
+        <span className="font-bold text-[#8B1E1E] dark:text-[#FF5C5C] [html[data-theme='dark']_&]:text-[#FF5C5C] transition-colors duration-200">
           Vidya
         </span>
-        <span className="font-normal text-[#1C1917] dark:text-[#FAF9F5]">
+        <span className="font-normal text-[#1C1917] dark:text-[#FFFFFF] [html[data-theme='dark']_&]:text-[#FFFFFF] transition-colors duration-200">
           गृह
         </span>
       </div>
       {subtitle && (
-        <span className="text-[9px] sm:text-[10px] font-mono uppercase tracking-[0.22em] text-muted-foreground mt-0.5">
+        <span className="text-[9px] sm:text-[10px] font-mono uppercase tracking-[0.22em] text-muted-foreground dark:text-[#A9A59D] [html[data-theme='dark']_&]:text-[#A9A59D] mt-0.5 transition-colors duration-200">
           Academic Intelligence
         </span>
       )}
