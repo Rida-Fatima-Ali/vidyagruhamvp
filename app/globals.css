@@ -105,32 +105,32 @@
   color-scheme: dark;
 
   /* Atmosphere */
-  --background: #141414;
-  --foreground: #f4f1e9;
+  --background: #0e0e0e;
+  --foreground: #faf9f5;
 
   /* Card surfaces */
-  --card: #1b1b1a;
-  --card-foreground: #f4f1e9;
+  --card: #161615;
+  --card-foreground: #faf9f5;
 
   /* Popovers */
-  --popover: #212120;
-  --popover-foreground: #f4f1e9;
+  --popover: #1c1c1b;
+  --popover-foreground: #faf9f5;
 
   /* Muted */
   --muted: #222220;
-  --muted-foreground: #a9a59d;
+  --muted-foreground: #c2beb6;
 
-  /* Primary — the same teal, lifted for legibility on graphite */
+  /* Primary — refined teal, lifted for legibility */
   --primary: #63b0b4;
   --primary-foreground: #0c2021;
 
   /* Secondary */
-  --secondary: #242423;
-  --secondary-foreground: #dedbd0;
+  --secondary: #20201f;
+  --secondary-foreground: #edeae2;
 
   /* Accent */
-  --accent: #262625;
-  --accent-foreground: #f4f1e9;
+  --accent: #262624;
+  --accent-foreground: #faf9f5;
 
   /* Success — sage */
   --success: #7fae8e;

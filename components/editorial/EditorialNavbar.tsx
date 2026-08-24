@@ -8,6 +8,7 @@ import { Menu, X, ArrowUpRight } from "lucide-react";
 import { ThemeToggle } from "@/components/navigation/theme-toggle";
 import { useTheme } from "@/components/provider/theme-provider";
 import SpecularButton from "@/components/landing/SpecularButton";
+import { VidyaGruhaWordmark } from "@/components/common/vidyagruha-wordmark";
 
 export default function EditorialNavbar() {
   const router = useRouter();
@@ -19,16 +20,7 @@ export default function EditorialNavbar() {
       <div className="max-w-[1400px] mx-auto px-6 sm:px-10 h-20 flex items-center justify-between">
         {/* Left: Brand Logo & Wordmark */}
         <Link href="/" className="flex items-center gap-3 group">
-          <div className="relative h-10 sm:h-12 w-44 sm:w-56 flex items-center">
-            <Image
-              src={theme === "dark" ? "/vidyagruha-logo-light.png" : "/vidyagruha-logo.png"}
-              alt="VidyaGruha"
-              width={260}
-              height={64}
-              priority
-              className="object-contain object-left h-9 sm:h-11 w-auto transition-opacity duration-200 group-hover:opacity-85"
-            />
-          </div>
+          <VidyaGruhaWordmark size="md" subtitle={false} />
         </Link>
 
         {/* Center: Minimalist Editorial Nav */}
