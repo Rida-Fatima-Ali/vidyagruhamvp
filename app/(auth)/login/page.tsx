@@ -54,6 +54,9 @@ const PRESET_ACCOUNTS = [
   { role: "faculty", name: "RNP", email: "rnp@somaiya.edu" },
   { role: "faculty", name: "NRP", email: "nrp@somaiya.edu" },
   { role: "faculty", name: "Charu", email: "charu@somaiya.edu" },
+  { role: "faculty", name: "Snehal Suryavanshi", email: "snehalsuryavanshi@somaiya.edu" },
+  { role: "faculty", name: "Madhuri", email: "madhuri@somaiya.edu" },
+  { role: "faculty", name: "Dr. Karthik Rao", email: "karthik.rao@somaiya.edu" },
   { role: "admin", name: "System Administrator", email: "admin01" },
 ];
 
@@ -289,6 +292,9 @@ export default function LoginPage() {
                 if (acc.email === "rnp@somaiya.edu") label = "RNP (CN)";
                 if (acc.email === "charu@somaiya.edu") label = "Charu (MP)";
                 if (acc.email === "varshakinge@somaiya.edu") label = "Varsha (Python)";
+                if (acc.email === "snehalsuryavanshi@somaiya.edu") label = "Snehal (C++)";
+                if (acc.email === "madhuri@somaiya.edu") label = "Madhuri (CL)";
+                if (acc.email === "karthik.rao@somaiya.edu") label = "Dr. Karthik (Math)";
 
                 return (
                   <button

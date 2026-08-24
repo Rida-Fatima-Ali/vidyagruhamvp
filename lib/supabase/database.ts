@@ -35,6 +35,12 @@ const PROFILES: Profile[] = [
   { id: "usr-fac-002", name: "RNP", email: "rnp@somaiya.edu", role: "faculty", department_id: "dept-cmpn", department_name: "Computer Engineering", created_at: "2026-01-01T00:00:00Z" },
   { id: "usr-fac-003", name: "NRP", email: "nrp@somaiya.edu", role: "faculty", department_id: "dept-it", department_name: "Information Technology", created_at: "2026-01-01T00:00:00Z" },
   { id: "usr-fac-004", name: "Charu", email: "charu@somaiya.edu", role: "faculty", department_id: "dept-cmpn", department_name: "Computer Engineering", created_at: "2026-01-01T00:00:00Z" },
+  { id: "usr-fac-005", name: "Snehal Suryavanshi", email: "snehalsuryavanshi@somaiya.edu", role: "faculty", department_id: "dept-cmpn", department_name: "Computer Engineering", created_at: "2026-01-01T00:00:00Z" },
+  { id: "usr-fac-006", name: "Madhuri", email: "madhuri@somaiya.edu", role: "faculty", department_id: "dept-cmpn", department_name: "Computer Engineering", created_at: "2026-01-01T00:00:00Z" },
+  { id: "usr-fac-007", name: "Dr. Karthik Rao", email: "karthik.rao@somaiya.edu", role: "faculty", department_id: "dept-cmpn", department_name: "Computer Engineering", created_at: "2026-01-01T00:00:00Z" },
+  { id: "usr-fac-008", name: "Rupali Patil", email: "rupalipatil@somaiya.edu", role: "faculty", department_id: "dept-cmpn", department_name: "Computer Engineering", created_at: "2026-01-01T00:00:00Z" },
+  { id: "usr-fac-009", name: "Niti Patel", email: "nitipatel@somaiya.edu", role: "faculty", department_id: "dept-it", department_name: "Information Technology", created_at: "2026-01-01T00:00:00Z" },
+  { id: "usr-fac-010", name: "Charulata Ingle", email: "charulataingle@somaiya.edu", role: "faculty", department_id: "dept-cmpn", department_name: "Computer Engineering", created_at: "2026-01-01T00:00:00Z" },
 
   // Admin
   { id: "usr-adm-001", name: "System Administrator", email: "admin01", role: "admin", created_at: "2026-01-01T00:00:00Z" },
@@ -75,6 +81,9 @@ const FACULTY: FacultyMember[] = [
   { id: "fac-rec-002", profile_id: "usr-fac-002", employee_id: "EMP-CMPN-102", department_id: "dept-cmpn", created_at: "2026-01-01T00:00:00Z" },
   { id: "fac-rec-003", profile_id: "usr-fac-003", employee_id: "EMP-IT-201", department_id: "dept-it", created_at: "2026-01-01T00:00:00Z" },
   { id: "fac-rec-004", profile_id: "usr-fac-004", employee_id: "EMP-CMPN-104", department_id: "dept-cmpn", created_at: "2026-01-01T00:00:00Z" },
+  { id: "fac-rec-005", profile_id: "usr-fac-005", employee_id: "EMP-CMPN-105", department_id: "dept-cmpn", created_at: "2026-01-01T00:00:00Z" },
+  { id: "fac-rec-006", profile_id: "usr-fac-006", employee_id: "EMP-CMPN-106", department_id: "dept-cmpn", created_at: "2026-01-01T00:00:00Z" },
+  { id: "fac-rec-007", profile_id: "usr-fac-007", employee_id: "EMP-CMPN-107", department_id: "dept-cmpn", created_at: "2026-01-01T00:00:00Z" },
 ];
 
 // ── 5. Subjects Table ─────────────────────────────────────────────────────────
