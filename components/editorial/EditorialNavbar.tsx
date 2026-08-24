@@ -63,20 +63,12 @@ export default function EditorialNavbar() {
           >
             Log In
           </Link>
-          <SpecularButton
-            size="sm"
-            onClick={() => router.push("/signup")}
-            radius={20}
-            tintOpacity={0.16}
-            blur={10}
-            intensity={1.25}
-            lineColor="#ff4d4d"
-            baseColor="#8B1E1E"
-            textColor="#ffffff"
-            className="!text-[11px] !font-semibold !tracking-[0.16em] !uppercase !px-4 !py-2 shadow-sm"
+          <Link
+            href="/signup"
+            className="inline-flex items-center justify-center px-4 py-2 rounded-full bg-[#1C1917] dark:bg-[#FAF9F5] hover:bg-[#8B1E1E] dark:hover:bg-[#8B1E1E] text-white dark:text-[#1C1917] dark:hover:text-white text-[11px] font-semibold tracking-[0.16em] uppercase transition-all duration-300 shadow-sm"
           >
-            Sign Up
-          </SpecularButton>
+            <span>Sign Up</span>
+          </Link>
           <Link
             href="/explore"
             className="group inline-flex items-center gap-1.5 px-4 py-2 rounded-full border border-border text-[11px] font-semibold tracking-[0.16em] uppercase text-foreground hover:border-[#8B1E1E] hover:bg-[#8B1E1E] hover:text-[#FAF9F5] transition-all duration-300"

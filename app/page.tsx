@@ -72,20 +72,12 @@ export default function PrimaryEditorialLandingPage() {
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" />
               </button>
 
-              <SpecularButton
-                size="md"
-                onClick={() => router.push("/signup")}
-                radius={4}
-                tintOpacity={0.16}
-                blur={12}
-                intensity={1.25}
-                lineColor="#ff4d4d"
-                baseColor="#8B1E1E"
-                textColor="#ffffff"
-                className="!text-[13px] !font-semibold !tracking-[0.16em] !uppercase !px-6 !py-4 shadow-sm"
+              <Link
+                href="/signup"
+                className="inline-flex items-center justify-center gap-2 px-6 py-4 border border-[#8B1E1E] bg-[#8B1E1E]/06 hover:bg-[#8B1E1E] hover:text-[#FAF9F5] text-[#8B1E1E] text-[13px] font-semibold tracking-[0.16em] uppercase transition-all duration-200 rounded-sm"
               >
-                Sign Up
-              </SpecularButton>
+                <span>Sign Up</span>
+              </Link>
 
               <Link
                 href="/explore"
@@ -320,20 +312,12 @@ export default function PrimaryEditorialLandingPage() {
                   <ArrowRight className="w-4 h-4" />
                 </button>
 
-                <SpecularButton
-                  size="md"
-                  onClick={() => router.push("/signup")}
-                  radius={4}
-                  tintOpacity={0.16}
-                  blur={12}
-                  intensity={1.25}
-                  lineColor="#ff4d4d"
-                  baseColor="#8B1E1E"
-                  textColor="#ffffff"
-                  className="!text-[12px] !font-semibold !tracking-[0.14em] !uppercase !px-6 !py-3.5 shadow-sm"
+                <Link
+                  href="/signup"
+                  className="inline-flex items-center justify-center gap-2 px-6 py-3.5 border border-[#8B1E1E] bg-[#8B1E1E]/06 hover:bg-[#8B1E1E] hover:text-[#FAF9F5] text-[#8B1E1E] text-[12px] font-semibold tracking-[0.14em] uppercase transition-all duration-300 rounded-sm"
                 >
-                  Sign Up
-                </SpecularButton>
+                  <span>Sign Up</span>
+                </Link>
 
                 <Link
                   href="/explore"
