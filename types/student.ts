@@ -46,6 +46,8 @@ export interface StudentAssignment {
   submittedAt?: string;
   grade?: string;
   maxMarks?: number;
+  submissionFile?: string;
+  reviewRemarks?: string;
 }
 
 export type NoticeCategory = "important" | "academic" | "general" | "event";

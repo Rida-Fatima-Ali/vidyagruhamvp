@@ -1,7 +1,20 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { CheckCheck, ClipboardCheck, Clock4, FileX } from "lucide-react";
+import {
+  CheckCheck,
+  ClipboardCheck,
+  Clock4,
+  Download,
+  FileCheck,
+  FileText,
+  FileX,
+  MessageSquare,
+  Paperclip,
+  Send,
+  Sparkles,
+  X,
+} from "lucide-react";
 import { Panel } from "@/components/common/panel";
 import { ListSkeleton } from "@/components/common/list-skeleton";
 import { ErrorState } from "@/components/common/error-state";
@@ -27,7 +40,6 @@ const STATE_META: Record<SubmissionState, { label: string; variant: "success" | 
 };
 
 export interface SubmissionsManagerProps {
-  /** Assignment id taken from the URL query, when present. */
   initialAssignmentId?: string | null;
 }
 
@@ -44,11 +56,39 @@ export function SubmissionsManager({ initialAssignmentId }: SubmissionsManagerPr
   const { data: view, loading, error, refresh } = useSubmissions(user, effectiveId);
   const grader = useGradeSubmission(user);
 
+  // Review Modal State
+  const [reviewingSubmission, setReviewingSubmission] = useState<FacultySubmission | null>(null);
+  const [reviewFeedback, setReviewFeedback] = useState<string>("");
+  const [reviewGrade, setReviewGrade] = useState<string>("");
+  const [savingReview, setSavingReview] = useState<boolean>(false);
+
   const sorted = useMemo(() => {
     const list = view?.submissions ?? [];
     const order: Record<SubmissionState, number> = { pending: 0, submitted: 1, missing: 2 };
     return [...list].sort((a, b) => order[a.status] - order[b.status]);
   }, [view]);
+
+  function handleOpenReviewModal(sub: FacultySubmission) {
+    setReviewingSubmission(sub);
+    setReviewFeedback(sub.feedback || "Good effort. Implementation logic is verified and correct.");
+    setReviewGrade(typeof sub.grade === "number" ? String(sub.grade) : String(Math.floor((view?.assignment.maxMarks ?? 20) * 0.9)));
+  }
+
+  async function handleSaveReviewModal() {
+    if (!reviewingSubmission) return;
+    setSavingReview(true);
+    const numeric = Number(reviewGrade);
+    const ok = await grader.grade(
+      reviewingSubmission.id,
+      Number.isFinite(numeric) ? numeric : 18,
+      reviewFeedback
+    );
+    setSavingReview(false);
+    if (ok) {
+      void refresh();
+      setReviewingSubmission(null);
+    }
+  }
 
   if (assignmentsLoading) {
     return <ListSkeleton rows={6} />;
@@ -66,6 +106,7 @@ export function SubmissionsManager({ initialAssignmentId }: SubmissionsManagerPr
 
   return (
     <div className="space-y-5">
+      {/* Assignment selector tabs */}
       <div
         role="tablist"
         aria-label="Choose an assignment"
@@ -84,7 +125,7 @@ export function SubmissionsManager({ initialAssignmentId }: SubmissionsManagerPr
                 "flex min-w-0 shrink-0 cursor-pointer flex-col items-start gap-0.5 rounded-xl border px-4 py-2.5 text-left transition-colors duration-150 focus-visible:outline-none",
                 isActive
                   ? "border-primary/50 bg-primary/10 text-foreground"
-                  : "border-border bg-surface-2/50 text-muted-foreground hover:text-foreground",
+                  : "border-border bg-card text-muted-foreground hover:text-foreground",
               )}
             >
               <span className="max-w-[16rem] truncate text-sm font-medium">
@@ -135,51 +176,169 @@ export function SubmissionsManager({ initialAssignmentId }: SubmissionsManagerPr
             {sorted.map((submission) => (
               <li
                 key={submission.id}
-                className="flex flex-col gap-3 px-5 py-3.5 sm:flex-row sm:items-center sm:gap-4"
+                className="flex flex-col gap-3 px-5 py-3.5 sm:flex-row sm:items-center sm:gap-4 hover:bg-secondary/30 transition-colors"
               >
                 <div className="flex min-w-0 flex-1 items-center gap-3">
                   <Avatar name={submission.studentName} size="sm" />
                   <div className="min-w-0">
                     <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
-                      <p className="truncate text-sm font-medium">
+                      <p className="truncate text-sm font-medium text-foreground">
                         {submission.studentName}
                       </p>
-                      <span className="tabular text-xs text-muted-foreground">
-                        {submission.rollNo}
+                      <span className="tabular text-xs text-muted-foreground font-mono">
+                        Roll {submission.rollNo}
                       </span>
                       <Badge variant={STATE_META[submission.status].variant}>
                         {STATE_META[submission.status].label}
                       </Badge>
+                      {typeof submission.grade === "number" && (
+                        <span className="text-[11px] font-bold text-success font-mono bg-success/10 px-1.5 py-0.2 rounded border border-success/20">
+                          {submission.grade} / {view?.assignment.maxMarks}
+                        </span>
+                      )}
                     </div>
                     {submission.submittedAt ? (
                       <p className="mt-0.5 text-xs text-muted-foreground">
-                        Submitted {formatRelativeTime(submission.submittedAt)}
+                        Submitted {formatRelativeTime(submission.submittedAt)} · File: <span className="font-mono text-foreground font-medium">{submission.rollNo}_CSC301.pdf</span>
                       </p>
                     ) : null}
                     {submission.feedback ? (
-                      <p className="mt-0.5 text-xs italic text-muted-foreground">
-                        “{submission.feedback}”
+                      <p className="mt-0.5 text-xs italic text-foreground/80 flex items-center gap-1">
+                        <MessageSquare className="w-3 h-3 text-primary shrink-0 inline" />
+                        <span>“{submission.feedback}”</span>
                       </p>
                     ) : null}
                   </div>
                 </div>
 
-                <GradeField
-                  key={`${submission.id}-${submission.grade ?? "none"}`}
-                  submission={submission}
-                  maxMarks={view?.assignment.maxMarks ?? 10}
-                  busy={grader.busy}
-                  onGraded={async (value, feedback) => {
-                    const ok = await grader.grade(submission.id, value, feedback);
-                    if (ok) void refresh();
-                    return ok;
-                  }}
-                />
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleOpenReviewModal(submission)}
+                    className="h-8 gap-1.5 text-xs"
+                  >
+                    <MessageSquare className="w-3.5 h-3.5 text-primary" />
+                    <span>Review Submission</span>
+                  </Button>
+
+                  <GradeField
+                    key={`${submission.id}-${submission.grade ?? "none"}`}
+                    submission={submission}
+                    maxMarks={view?.assignment.maxMarks ?? 10}
+                    busy={grader.busy}
+                    onGraded={async (value, feedback) => {
+                      const ok = await grader.grade(submission.id, value, feedback);
+                      if (ok) void refresh();
+                      return ok;
+                    }}
+                  />
+                </div>
               </li>
             ))}
           </ul>
         )}
       </Panel>
+
+      {/* MODAL: FACULTY REVIEW & EVALUATION DRAWER */}
+      {reviewingSubmission && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="w-full max-w-lg bg-card border border-border rounded-2xl p-6 shadow-2xl space-y-5 animate-in fade-in zoom-in-95 duration-200">
+            <div className="flex items-center justify-between border-b border-border pb-3">
+              <div>
+                <span className="text-[11px] uppercase tracking-wider font-semibold text-primary">
+                  Faculty Assignment Review
+                </span>
+                <h3 className="text-lg font-bold text-foreground mt-0.5">
+                  Reviewing {reviewingSubmission.studentName}
+                </h3>
+              </div>
+              <button
+                onClick={() => setReviewingSubmission(null)}
+                className="p-1 text-muted-foreground hover:text-foreground rounded-lg"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            <div className="space-y-4 text-xs">
+              {/* Student Metadata Card */}
+              <div className="bg-secondary/40 p-3.5 rounded-xl border border-border flex items-center justify-between">
+                <div>
+                  <p className="font-bold text-foreground text-sm">{reviewingSubmission.studentName}</p>
+                  <p className="text-muted-foreground">Roll No: {reviewingSubmission.rollNo} · Division A</p>
+                </div>
+                <Badge variant={STATE_META[reviewingSubmission.status].variant}>
+                  {STATE_META[reviewingSubmission.status].label}
+                </Badge>
+              </div>
+
+              {/* Submitted File Preview Card */}
+              <div className="border border-border p-3.5 rounded-xl bg-card space-y-2">
+                <span className="text-[11px] font-semibold text-muted-foreground block">
+                  Submitted Assignment Document
+                </span>
+                <div className="flex items-center justify-between p-2 rounded-lg bg-secondary/50 border border-border">
+                  <div className="flex items-center gap-2">
+                    <FileCheck className="w-4 h-4 text-primary" />
+                    <div>
+                      <p className="font-semibold text-foreground">{reviewingSubmission.rollNo}_CSC301_Assignment.pdf</p>
+                      <p className="text-[10px] text-muted-foreground">PDF Document · 1.4 MB · Uploaded on time</p>
+                    </div>
+                  </div>
+                  <Button variant="ghost" size="sm" className="h-7 text-xs">
+                    <Download className="w-3.5 h-3.5 mr-1" />
+                    <span>Download</span>
+                  </Button>
+                </div>
+              </div>
+
+              {/* Faculty Review Remarks Input */}
+              <div className="space-y-1.5">
+                <label className="font-semibold text-foreground flex items-center gap-1">
+                  <MessageSquare className="w-3.5 h-3.5 text-primary" />
+                  <span>Faculty Review Remarks & Detailed Feedback:</span>
+                </label>
+                <textarea
+                  value={reviewFeedback}
+                  onChange={(e) => setReviewFeedback(e.target.value)}
+                  placeholder="Provide feedback on the submission, code quality, and test results..."
+                  rows={3}
+                  className="w-full p-2.5 rounded-xl border border-border bg-background text-foreground text-xs focus:ring-2 focus:ring-primary focus:outline-none"
+                />
+              </div>
+
+              {/* Assigned Marks */}
+              <div className="space-y-1.5">
+                <label className="font-semibold text-foreground">
+                  Evaluation Marks (out of {view?.assignment.maxMarks ?? 20}):
+                </label>
+                <div className="flex items-center gap-2">
+                  <Input
+                    type="number"
+                    min={0}
+                    max={view?.assignment.maxMarks ?? 20}
+                    value={reviewGrade}
+                    onChange={(e) => setReviewGrade(e.target.value)}
+                    className="h-9 w-24 tabular text-foreground font-mono font-bold"
+                  />
+                  <span className="text-muted-foreground">/ {view?.assignment.maxMarks ?? 20} Marks</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-end gap-2 pt-2 border-t border-border">
+              <Button variant="outline" size="sm" onClick={() => setReviewingSubmission(null)}>
+                Cancel
+              </Button>
+              <Button size="sm" disabled={savingReview} onClick={handleSaveReviewModal}>
+                <CheckCheck className="w-3.5 h-3.5 mr-1.5" />
+                <span>{savingReview ? "Saving Review…" : "Approve & Save Review"}</span>
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

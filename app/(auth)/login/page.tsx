@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import type { UserRole } from "@/types/auth";
+import { VidyaGruhaWordmark } from "@/components/common/vidyagruha-wordmark";
 
 const ROLES: { id: UserRole; label: string; icon: any; hint: string }[] = [
   {
@@ -123,21 +124,12 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen w-full bg-[#FAF9F5] text-[#28251D] flex flex-col justify-between selection:bg-[#8B1E1E] selection:text-[#FAF9F5]">
+    <div className="min-h-screen w-full bg-background text-foreground flex flex-col justify-between selection:bg-[#8B1E1E] selection:text-[#FAF9F5] transition-colors duration-300">
       {/* Top Header */}
-      <header className="w-full bg-[#FAF9F5]/90 backdrop-blur-md border-b border-[#28251D]/08 sticky top-0 z-30">
+      <header className="w-full bg-background/90 backdrop-blur-md border-b border-border sticky top-0 z-30">
         <div className="max-w-[1300px] mx-auto px-6 sm:px-10 h-20 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="relative h-10 w-44 sm:w-56 flex items-center">
-              <Image
-                src="/vidyagruha-logo.png"
-                alt="VidyaGruha"
-                width={240}
-                height={60}
-                priority
-                className="object-contain object-left h-9 sm:h-10 w-auto transition-opacity duration-200 group-hover:opacity-85"
-              />
-            </div>
+            <VidyaGruhaWordmark size="md" subtitle={false} />
           </Link>
 
           <div className="flex items-center gap-4">
@@ -149,9 +141,9 @@ export default function LoginPage() {
             </Link>
             <Link
               href="/explore"
-              className="hidden sm:inline-flex items-center gap-1 px-4 py-2 rounded-full border border-[#28251D]/15 text-[11px] font-semibold tracking-[0.14em] uppercase text-[#28251D] hover:bg-[#28251D] hover:text-[#FAF9F5] transition-all"
+              className="hidden sm:inline-flex items-center gap-1 px-4 py-2 rounded-full border border-border text-[11px] font-semibold tracking-[0.14em] uppercase text-foreground hover:bg-[#8B1E1E] hover:text-[#FAF9F5] transition-all"
             >
-              Explore Tour
+              Explore
             </Link>
           </div>
         </div>
@@ -163,23 +155,17 @@ export default function LoginPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-          className="w-full max-w-md bg-[#FDFCFB] border border-[#28251D]/12 rounded-2xl p-8 sm:p-10 shadow-sm"
+          className="w-full max-w-md bg-card border border-border rounded-2xl p-8 sm:p-10 shadow-sm"
         >
           {/* Brand Logo & Welcome */}
           <div className="text-center mb-8">
-            <div className="relative h-12 w-48 mx-auto mb-4 flex items-center justify-center">
-              <Image
-                src="/vidyagruha-logo.png"
-                alt="VidyaGruha"
-                width={220}
-                height={55}
-                className="object-contain"
-              />
+            <div className="flex justify-center mb-4">
+              <VidyaGruhaWordmark size="lg" subtitle={true} className="items-center" />
             </div>
-            <h1 className="text-2xl font-serif text-[#1C1917]">
+            <h1 className="text-2xl font-serif text-foreground">
               Sign in to your account
             </h1>
-            <p className="mt-1 text-xs text-[#77736B]">
+            <p className="mt-1 text-xs text-muted-foreground">
               Enter your institutional credentials to access your workspace.
             </p>
           </div>
