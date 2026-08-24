@@ -38,7 +38,7 @@ const themeScript = `
   try {
     var theme = localStorage.getItem("${THEME_STORAGE_KEY}");
     if (theme !== "dark" && theme !== "light") {
-      theme = window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+      theme = "light";
     }
     document.documentElement.setAttribute("data-theme", theme);
   } catch (e) {

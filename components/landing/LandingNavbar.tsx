@@ -61,10 +61,10 @@ export default function LandingNavbar() {
           justifyContent: "space-between",
         }}
       >
-        {/* Left: Brand Logo & Sign In */}
+        {/* Left: Brand Logo & Back to Main Page */}
         <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
           <button
-            onClick={() => router.push("/login")}
+            onClick={() => router.push("/")}
             style={{
               display: "flex",
               alignItems: "center",
@@ -80,10 +80,10 @@ export default function LandingNavbar() {
               letterSpacing: "0.05em",
               transition: "all 0.2s ease",
             }}
-            title="Go to Sign In"
+            title="Back to Main Page"
           >
             <ArrowLeft style={{ width: "14px", height: "14px" }} />
-            <span>Sign In</span>
+            <span>Back</span>
           </button>
 
           <a
