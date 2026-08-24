@@ -11,7 +11,7 @@ export const MOCK_SPOTLIGHT: Record<UserRole, MockSpotlight> = {
   student: {
     eyebrow: "Up next on campus",
     title: "SIH 2026 internal round — registrations open",
-    meta: "Aug 18 · 5:00 PM · Innovation Lab",
+    meta: "25 Aug, 10:30 AM · Innovation Lab",
     body: "Build, demo and pitch your solution. Teams of up to six.",
   },
   faculty: {

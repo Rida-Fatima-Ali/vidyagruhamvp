@@ -61,25 +61,26 @@ export default function LandingNavbar() {
           justifyContent: "space-between",
         }}
       >
-        {/* Left: Brand Logo & Back */}
+        {/* Left: Brand Logo & Sign In */}
         <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
           <button
-            onClick={() => router.push("/")}
+            onClick={() => router.push("/login")}
             style={{
               display: "flex",
               alignItems: "center",
               gap: "0.5rem",
-              background: "rgba(255,255,255,0.06)",
-              border: "1px solid rgba(255,255,255,0.12)",
+              background: "rgba(255,255,255,0.08)",
+              border: "1px solid rgba(255,255,255,0.18)",
               color: "#fff",
               borderRadius: "6px",
-              padding: "0.35rem 0.75rem",
+              padding: "0.4rem 0.85rem",
               fontSize: "0.75rem",
               cursor: "pointer",
-              fontWeight: 500,
+              fontWeight: 600,
+              letterSpacing: "0.05em",
               transition: "all 0.2s ease",
             }}
-            title="Return to Main Sign In"
+            title="Go to Sign In"
           >
             <ArrowLeft style={{ width: "14px", height: "14px" }} />
             <span>Sign In</span>

@@ -4,6 +4,7 @@ import LandingNavbar from "@/components/landing/LandingNavbar";
 import HeroSection from "@/components/landing/HeroSection";
 import AboutSection from "@/components/landing/AboutSection";
 import WhyCampusSection from "@/components/landing/WhyCampusSection";
+import ResearchReferencesSection from "@/components/landing/ResearchReferencesSection";
 import FinalCTASection from "@/components/landing/FinalCTASection";
 
 export default function ExplorePage() {
@@ -13,7 +14,7 @@ export default function ExplorePage() {
         width: "100vw",
         maxWidth: "100vw",
         overflowX: "hidden",
-        backgroundColor: "#000",
+        backgroundColor: "#030407",
         color: "#fff",
       }}
     >
@@ -21,6 +22,7 @@ export default function ExplorePage() {
       <HeroSection />
       <AboutSection />
       <WhyCampusSection />
+      <ResearchReferencesSection />
       <FinalCTASection />
     </main>
   );

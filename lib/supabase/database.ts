@@ -142,10 +142,10 @@ const NOTICES: Notice[] = [
   {
     id: "not-002",
     title: "Campus Smart India Hackathon 2026 Internal Round",
-    content: "All short-listed teams must submit project repositories by Friday 5:00 PM for evaluation.",
+    content: "All short-listed teams must submit project repositories by 25 Aug, 10:30 AM for evaluation.",
     priority: "urgent",
     author_name: "Prof. Varsha Kinge",
-    created_at: "2026-08-23T14:30:00Z",
+    created_at: "2026-08-25T10:30:00Z",
   },
   {
     id: "not-003",
@@ -269,6 +269,104 @@ export const mvpDb = {
     });
 
     return summaries;
+  },
+
+  getAllStudents(): { id: string; name: string; rollNo: string; division: string; enrollmentNo: string; email: string }[] {
+    return STUDENTS.map((st) => {
+      const p = PROFILES.find((pr) => pr.id === st.profile_id);
+      return {
+        id: st.id,
+        name: p?.name || "Student",
+        rollNo: st.enrollment_no.slice(-2),
+        division: st.division,
+        enrollmentNo: st.enrollment_no,
+        email: p?.email || "",
+      };
+    });
+  },
+
+  getStudentDetailedAttendance(
+    studentId: string,
+    options?: { month?: string; week?: number }
+  ) {
+    const student = STUDENTS.find((s) => s.id === studentId) || STUDENTS[0];
+    const profile = PROFILES.find((p) => p.id === student.profile_id);
+
+    let records = ATTENDANCE.filter((a) => a.student_id === student.id);
+
+    // Filter by month (e.g., "2026-08")
+    const month = options?.month || "2026-08";
+    records = records.filter((a) => a.date.startsWith(month));
+
+    // Filter by week (1 to 5)
+    if (options?.week) {
+      const week = options.week;
+      records = records.filter((a) => {
+        const dayOfMonth = parseInt(a.date.split("-")[2], 10);
+        const recordWeek = Math.min(Math.ceil(dayOfMonth / 7), 5);
+        return recordWeek === week;
+      });
+    }
+
+    // Format readable present dates
+    const presentRecords = records.filter((a) => a.status === "present" || a.status === "late");
+    const presentDates = Array.from(
+      new Set(
+        presentRecords.map((r) => {
+          const parts = r.date.split("-");
+          const day = parts[2];
+          const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+          const monthName = months[parseInt(parts[1], 10) - 1];
+          return `${day} ${monthName} ${parts[0]}`;
+        })
+      )
+    ).sort();
+
+    const absentRecords = records.filter((a) => a.status === "absent");
+    const absentDates = Array.from(
+      new Set(
+        absentRecords.map((r) => {
+          const parts = r.date.split("-");
+          const day = parts[2];
+          const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+          const monthName = months[parseInt(parts[1], 10) - 1];
+          return `${day} ${monthName} ${parts[0]}`;
+        })
+      )
+    ).sort();
+
+    const total = records.length;
+    const presentCount = presentRecords.length;
+    const absentCount = absentRecords.length;
+    const lateCount = records.filter((a) => a.status === "late").length;
+    const percentage = total > 0 ? Number(((presentCount / total) * 100).toFixed(2)) : 0;
+
+    return {
+      student: {
+        id: student.id,
+        name: profile?.name || "Student",
+        enrollmentNo: student.enrollment_no,
+        division: student.division,
+        semester: student.semester,
+      },
+      stats: {
+        total,
+        presentCount,
+        absentCount,
+        lateCount,
+        percentage,
+      },
+      presentDates,
+      absentDates,
+      records: records.map((r) => {
+        const subj = SUBJECTS.find((s) => s.id === r.subject_id);
+        return {
+          ...r,
+          subject_name: subj?.name || "Subject",
+          subject_code: subj?.code || "CSC",
+        };
+      }),
+    };
   },
 
   getStudentTimetable(departmentId: string, division = "A"): TimetableSlot[] {

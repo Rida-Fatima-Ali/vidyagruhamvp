@@ -13,15 +13,15 @@ export default function FinalCTASection() {
       style={{
         position: "relative",
         width: "100vw",
-        height: "30vh",
-        minHeight: "220px",
+        height: "32vh",
+        minHeight: "240px",
         maxWidth: "100vw",
         overflow: "hidden",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        background: "#0a0a0f",
-        borderTop: "1px solid rgba(255,255,255,0.05)",
+        background: "#06090e",
+        borderTop: "1px solid rgba(255,255,255,0.06)",
       }}
     >
       {/* Subtle top divider glow */}
@@ -31,10 +31,9 @@ export default function FinalCTASection() {
           top: 0,
           left: "50%",
           transform: "translateX(-50%)",
-          width: "320px",
+          width: "360px",
           height: "1px",
-          background:
-            "linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent)",
+          background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.22), transparent)",
           pointerEvents: "none",
         }}
       />
@@ -50,18 +49,18 @@ export default function FinalCTASection() {
           zIndex: 1,
           textAlign: "center",
           padding: "0 1.5rem",
-          maxWidth: "600px",
+          maxWidth: "640px",
           width: "100%",
         }}
       >
         <h2
           style={{
-            fontSize: "clamp(1.4rem, 4vw, 2.5rem)",
-            fontWeight: 700,
+            fontSize: "clamp(1.5rem, 4vw, 2.5rem)",
+            fontWeight: 800,
             color: "#ffffff",
             lineHeight: 1.15,
             letterSpacing: "-0.02em",
-            marginBottom: "0.625rem",
+            marginBottom: "0.75rem",
           }}
         >
           Ready to Enter VidyaGruha?
@@ -69,22 +68,22 @@ export default function FinalCTASection() {
 
         <p
           style={{
-            fontSize: "clamp(0.85rem, 1.8vw, 1rem)",
-            color: "rgba(255,255,255,0.40)",
+            fontSize: "clamp(0.875rem, 1.8vw, 1.05rem)",
+            color: "rgba(255,255,255,0.60)",
             lineHeight: 1.65,
-            marginBottom: "1.5rem",
+            marginBottom: "1.75rem",
           }}
         >
-          Join your college community and experience unified academic intelligence.
+          Join your institutional academic network with seamless timetable tracking, attendance transparency, and faculty coordination.
         </p>
 
         <SpecularButton
           size="lg"
-          onClick={() => router.push("/signin")}
+          onClick={() => router.push("/login")}
           radius={22}
-          tintOpacity={0.08}
+          tintOpacity={0.12}
           blur={10}
-          intensity={1.2}
+          intensity={1.25}
           shineSize={9}
           shineFade={38}
         >

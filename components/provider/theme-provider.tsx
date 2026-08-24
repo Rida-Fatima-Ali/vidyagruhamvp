@@ -42,8 +42,8 @@ function applyTheme(theme: Theme): void {
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setTheme] = useState<Theme>(() => {
-    if (typeof window === "undefined") return "dark";
-    return readStoredTheme() ?? systemTheme();
+    if (typeof window === "undefined") return "light";
+    return readStoredTheme() ?? "light";
   });
 
   useEffect(() => {

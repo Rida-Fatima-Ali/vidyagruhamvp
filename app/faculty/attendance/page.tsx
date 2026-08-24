@@ -1,12 +1,13 @@
 "use client";
 
-import { Suspense } from "react";
+import { useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { PageTransition } from "@/components/common/page-transition";
 import { PageHeader } from "@/components/common/page-header";
 import { ListSkeleton } from "@/components/common/list-skeleton";
 import { AttendanceWorkbench } from "@/components/faculty/attendance-workbench";
 import { AttendanceAnalytics } from "@/components/faculty/attendance-analytics";
+import { StudentAttendanceInspector } from "@/components/faculty/student-attendance-inspector";
 import { useAuth } from "@/hooks/use-auth";
 import {
   useAttendanceAnalytics,
@@ -15,18 +16,56 @@ import {
 } from "@/hooks/use-faculty";
 import { DEMO_TODAY } from "@/constants/demo";
 import { groupLabel } from "@/mocks/roster";
+import { CalendarCheck, Users } from "lucide-react";
+import { cn } from "@/utils/cn";
 
 export default function FacultyAttendancePage() {
+  const [activeTab, setActiveTab] = useState<"batch" | "student">("batch");
+
   return (
     <PageTransition>
       <div className="space-y-6">
         <PageHeader
           eyebrow="Faculty · Attendance"
-          title="Mark attendance"
-          description="Every run you save here is instantly reflected in the students' attendance view and the class analytics."
+          title="Attendance Management"
+          description="Mark live class sessions, inspect individual student present dates, and monitor institutional analytics."
         />
+
+        {/* Top-Level Mode Selector */}
+        <div className="inline-flex rounded-xl border border-border bg-card p-1 shadow-sm">
+          <button
+            onClick={() => setActiveTab("batch")}
+            className={cn(
+              "inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold rounded-lg transition-all cursor-pointer",
+              activeTab === "batch"
+                ? "bg-[#1C1917] dark:bg-[#FAF9F5] text-white dark:text-[#1C1917] shadow-sm"
+                : "text-muted-foreground hover:text-foreground"
+            )}
+          >
+            <CalendarCheck className="w-4 h-4" />
+            <span>Mark Lecture Attendance</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab("student")}
+            className={cn(
+              "inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold rounded-lg transition-all cursor-pointer",
+              activeTab === "student"
+                ? "bg-[#1C1917] dark:bg-[#FAF9F5] text-white dark:text-[#1C1917] shadow-sm"
+                : "text-muted-foreground hover:text-foreground"
+            )}
+          >
+            <Users className="w-4 h-4" />
+            <span>Student Attendance & Present Dates</span>
+          </button>
+        </div>
+
         <Suspense fallback={<ListSkeleton rows={6} />}>
-          <AttendancePageContent />
+          {activeTab === "batch" ? (
+            <AttendancePageContent />
+          ) : (
+            <StudentAttendanceInspector />
+          )}
         </Suspense>
       </div>
     </PageTransition>
